@@ -1,10 +1,12 @@
 package org.embl.person;
 
+import java.io.BufferedReader;
 import java.io.Console;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -110,7 +112,7 @@ public class PersonCSV
 	private PersonReader reader;
 	private PersonWriter writer;
 	private ArrayList<Person> personlist;
-	private Console console;
+	private BufferedReader console;
 
 	public PersonCSV() throws FileNotFoundException, IOException
 	{
@@ -134,7 +136,7 @@ public class PersonCSV
 			InputStream is = new FileInputStream(filename);
 			System.setIn(is);
 		}
-		console = System.console();
+		console = new BufferedReader(new InputStreamReader(System.in));//System.console();
 		if (header) 
 		{
 			String heads = console.readLine();
@@ -190,7 +192,7 @@ public class PersonCSV
 		
 	}
 
-	private void filter() 
+	private void filter() throws IOException 
 	{
         String record;
 		Person p;
@@ -205,13 +207,13 @@ public class PersonCSV
 			}
 			else
 			{
-				console.printf("%s\n", writer.toJSONString(p));
+				System.out.printf("%s\n", writer.toJSONString(p));
 			}
 		}
 		
 		if (batch) 
 		{
-			console.printf("%s\n", writer.toJSONString(personlist).replaceAll("},", "},\n"));
+			System.out.printf("%s\n", writer.toJSONString(personlist).replaceAll("},", "},\n"));
 		}
 	}
 
@@ -219,7 +221,7 @@ public class PersonCSV
 	{
 		if (!quiet) 
 		{
-			console.printf("%s\n", infomsg);
+			System.out.printf("%s\n", infomsg);
 		}
 	}
 
